@@ -1,102 +1,232 @@
-type: vertical-stack
-cards:
-  - type: custom:mushroom-title-card
-    title: >-
-      🎄 {{ 'Bonsoir' if now().hour > 17 else 'Bonjour' }} {{ user.split('
-      ')[-1] }} 🎅
-    alignment: center
-    card_mod:
-      style: |
-        ha-card {
-          --title-font-size: 24px !important;
-          --subtitle-font-size: 14px !important;
-          margin-top: -10px;
-        }
-  - type: custom:mushroom-chips-card
-    chips:
-      - type: weather
-        entity: weather.toulon
-        show_conditions: true
-        show_temperature: true
-      - type: template
-        entity: sensor.temperature_sejour
-        icon: mdi:sofa
-        icon_color: orange
-        content: "{{ states(entity) | round(1) }}°C"
-        tap_action:
-          action: more-info
-      - type: template
-        entity: sensor.temperature_chambre
-        icon: mdi:bed
-        icon_color: blue
-        content: "{{ states(entity) | round(1) }}°C"
-        tap_action:
-          action: more-info
-      - type: template
-        entity: sensor.temperature_couloir
-        icon: mdi:walk
-        icon_color: grey
-        content: "{{ states(entity) | round(1) }}°C"
-        tap_action:
-          action: more-info
-    alignment: center
-    card_mod:
-      style: |
-        ha-card {
-          --chip-background: rgba(var(--rgb-primary-text-color), 0.05);
-          margin-bottom: 20px;
-        }
-  - type: custom:mushroom-climate-card
-    entity: climate.clim_salon
-    name: Salon
-    icon: mdi:sofa
-    hvac_modes:
-      - heat
-      - cool
-      - dry
-      - "off"
-    show_temperature_control: true
-    collapsible_controls: true
-    layout: horizontal
-    fill_container: true
-    primary_info: name
-    secondary_info: state
-    tap_action:
-      action: toggle
-  - type: custom:mushroom-climate-card
-    entity: climate.clim_sam
-    name: Salle à Manger
-    icon: mdi:table-chair
-    hvac_modes:
-      - heat
-      - cool
-      - dry
-      - "off"
-    show_temperature_control: true
-    collapsible_controls: true
-    layout: horizontal
-    fill_container: true
-  - type: custom:mushroom-climate-card
-    entity: climate.clim_chambre
-    name: Chambre
-    icon: mdi:bed
-    hvac_modes:
-      - heat
-      - cool
-      - dry
-      - "off"
-    show_temperature_control: true
-    collapsible_controls: true
-    layout: horizontal
-    fill_container: true
-  - type: custom:mushroom-template-card
-    primary: Consommation Climatisation
-    secondary: |
-      {{ (states('sensor.clim_salon_energie') | float(0) + 
-          states('sensor.clim_sam_energie') | float(0) + 
-          states('sensor.clim_chambre_energie') | float(0)) | round(1) }} kWh
-    icon: mdi:lightning-bolt
-    icon_color: yellow
-    layout: horizontal
-    tap_action:
-      action: none
+type: custom:button-card
+name: Séjour
+styles:
+  grid:
+    - grid-template-areas: "\"temp btn2 btn1\" \"n btn2 btn1\""
+    - grid-template-columns: 1fr mid-content
+    - grid-template-rows: 65% 1fr
+  card:
+    - height: 160px
+    - padding: 6px
+  name:
+    - justify-self: start
+    - align-self: start
+    - font-size: 14px
+    - padding-left: 20px
+  custom_fields:
+    graph:
+      - position: absolute
+      - width: 100%
+      - left: 0
+      - bottom: 0
+    temp:
+      - justify-self: start
+      - align-self: end
+      - font-size: 2.6em
+      - font-weight: 300
+      - padding-left: 20px
+custom_fields:
+  btn2:
+    card:
+      type: custom:paper-buttons-row
+      styles:
+        display: flex
+        flex-direction: row
+        flex-wrap: nowrap
+      buttons:
+        - icon: mdi:power
+          name: false
+          ripple: none
+          entity: climate.clim_salon
+          tap_action:
+            action: toggle
+          styles:
+            button:
+              background: "#333"
+              width: 34px
+              height: 34px
+              border-radius: 50% 0 0 50%
+            icon:
+              color: "#fff"
+          state_styles:
+            "off":
+              button:
+                background: "#333"
+              icon:
+                color: "#fff"
+            heat:
+              button:
+                background: "#ffffff"
+                width: 34px
+                height: 34px
+                border-radius: 50% 0 0 50%
+              icon:
+                color: "#000000"
+            cool:
+              button:
+                background: "#ffffff"
+                width: 34px
+                height: 34px
+                border-radius: 50% 0 0 50%
+              icon:
+                color: "#000000"
+            fan_only:
+              button:
+                background: "#ffffff"
+                width: 34px
+                height: 34px
+                border-radius: 50% 0 0 50%
+              icon:
+                color: "#000000"
+            dry:
+              button:
+                background: "#ffffff"
+                width: 34px
+                height: 34px
+                border-radius: 50% 0 0 50%
+              icon:
+                color: "#000000"
+            auto:
+              button:
+                background: "#ffffff"
+                width: 34px
+                height: 34px
+                border-radius: 50% 0 0 50%
+              icon:
+                color: "#000000"
+        - icon: mdi:heat-wave
+          name: false
+          ripple: none
+          entity: climate.clim_salon
+          tap_action:
+            action: call-service
+            service: climate.set_hvac_mode
+            service_data:
+              entity_id: climate.clim_salon
+              hvac_mode: heat
+          styles:
+            button:
+              background: "#333"
+              width: 34px
+              height: 34px
+              border-radius: 0
+            icon:
+              color: "#fff"
+          state_styles:
+            heat:
+              button:
+                background: "#ffffff"
+              icon:
+                color: "#000000"
+        - icon: mdi:snowflake
+          name: false
+          ripple: none
+          entity: climate.clim_salon
+          tap_action:
+            action: call-service
+            service: climate.set_hvac_mode
+            service_data:
+              entity_id: climate.clim_salon
+              hvac_mode: cool
+          styles:
+            button:
+              background: "#333"
+              width: 34px
+              height: 34px
+              border-radius: 0
+            icon:
+              color: "#fff"
+          state_styles:
+            cool:
+              button:
+                background: "#ffffff"
+              icon:
+                color: "#000000"
+        - icon: mdi:fan
+          name: false
+          ripple: none
+          entity: climate.clim_salon
+          tap_action:
+            action: call-service
+            service: climate.set_hvac_mode
+            service_data:
+              entity_id: climate.clim_salon
+              hvac_mode: fan_only
+          styles:
+            button:
+              background: "#333"
+              width: 34px
+              height: 34px
+              border-radius: 0
+            icon:
+              color: "#fff"
+          state_styles:
+            fan_only:
+              button:
+                background: "#ffffff"
+              icon:
+                color: "#000000"
+  btn1:
+    card:
+      type: custom:paper-buttons-row
+      styles:
+        display: flex
+        flex-direction: column
+        flex-wrap: wrap
+      buttons:
+        - icon: mdi:chevron-up
+          name: false
+          ripple: none
+          styles:
+            icon:
+              color: "#ffffff"
+            button:
+              background: "#444"
+              border-radius: 50% 50% 0 0
+              width: 38px
+              height: 38px
+              z-index: 1
+        - name: 20°
+          ripple: none
+          styles:
+            name:
+              color: "#ffffff"
+            button:
+              background: "#444"
+              border-radius: 0
+              width: 38px
+              height: 38px
+              z-index: 1
+        - icon: mdi:chevron-down
+          name: false
+          ripple: none
+          styles:
+            icon:
+              color: "#ffffff"
+            button:
+              background: "#444"
+              border-radius: 0 0 50% 50%
+              width: 38px
+              height: 38px
+              z-index: 1
+  graph:
+    card:
+      type: custom:mini-graph-card
+      entities:
+        - entity: sensor.temperature_sejour
+          color: "#ffffff"
+      line_width: 4
+      height: 60
+      show:
+        icon: false
+        name: false
+        state: false
+        legend: false
+        labels: false
+      card_mod:
+        style: |
+          ha-card { border-style: none; background: none; box-shadow: none; }
+  temp: |
+    [[[
+    return Number(states['sensor.temperature_sejour'].state).toFixed(1) + '°'
+    ]]]
