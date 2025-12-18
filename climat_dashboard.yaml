@@ -215,11 +215,7 @@ custom_fields:
       card_mod:
         style: |
           ha-card { border-style: none; background: none; box-shadow: none; }
-  temp: >
+  temp: |
     [[[
-
-    return
-    Number(states['sensor.clim_salon_temperature_ambiante'].state).toFixed(1) +
-    '°'
-
+    return Number(states['sensor.temperature_sejour'].state).toFixed(1) + '°'
     ]]]
