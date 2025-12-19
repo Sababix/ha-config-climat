@@ -1,5 +1,5 @@
 type: custom:button-card
-name: Séjour
+name: Salon
 styles:
   grid:
     - grid-template-areas: "\"temp btn2 btn1\" \"n btn2 btn1\""
